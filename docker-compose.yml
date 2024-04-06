@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    user: 'node'
+    restart: 'always'
+    container_name: ${COMPOSE_PROJECT_NAME-strivee}-app
+    working_dir: /usr/app/
+    command: 'npm run start:dev'
+    ports:
+      - ${PORT-80}:${PORT-80}
+    volumes:
+      - .:/usr/app/
+      - .env:/usr/app/.env
+      - ./node_modules:/usr/app/node_modules
+    env_file:
+      - .env
