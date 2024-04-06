@@ -16,6 +16,17 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@strivee-api/*": [
+        "src/*"
+      ],
+      "@strivee-api/test/*": [
+        "test/*"
+      ],
+      "@strivee-api/test": [
+        "test"
+      ]
+    }
   }
 }
