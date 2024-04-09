@@ -6,7 +6,7 @@ export interface RecruitingSearchOptions {
   /**
    * The sought business category.
    */
-  job?: string;
+  job: string;
 
   /**
    * The sought postal code.

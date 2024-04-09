@@ -48,7 +48,7 @@ describe('Application/Company/RecruitingCompanyAggregator', () => {
 
       aggregator.addSource(source);
 
-      const aggregate = await aggregator.createAggregate({});
+      const aggregate = await aggregator.createAggregate({ job: '' });
 
       expect(aggregate).toBeTruthy();
       expect(aggregate.entities()).toStrictEqual(companies);
@@ -61,7 +61,7 @@ describe('Application/Company/RecruitingCompanyAggregator', () => {
 
       aggregator.addSource(source);
 
-      await expect(async () => await aggregator.createAggregate({})).rejects.toThrow(NoAggregationReadySourceError);
+      await expect(async () => await aggregator.createAggregate({ job: '' })).rejects.toThrow(NoAggregationReadySourceError);
       expect(source.isReady as Mock).toHaveBeenCalledTimes(1);
     });
 
@@ -76,9 +76,7 @@ describe('Application/Company/RecruitingCompanyAggregator', () => {
 
       aggregator.addSource(source);
 
-      await expect(async () => await aggregator.createAggregate({})).rejects.toThrow(
-        NoValidAggregationSourceResultError,
-      );
+      await expect(async () => await aggregator.createAggregate({ job: '' })).rejects.toThrow(NoValidAggregationSourceResultError);
       expect(source.createAggregate as Mock).toHaveBeenCalledTimes(1);
     });
   });
