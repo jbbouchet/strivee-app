@@ -1,8 +1,9 @@
-import { Generator } from '@strivee-api/core';
-import { Company } from '@strivee-api/company';
 import { faker } from '@faker-js/faker/locale/fr';
+import { Company } from '@strivee-api/company';
+import { Generator } from '@strivee-api/core';
 import { Address } from '@strivee-api/geo';
 import { FakeAddressGenerator } from '@strivee-api/geo/infrastructure/generator';
+
 
 /**
  * Use this class to generate `Company` using the Fakejs lib.
@@ -27,7 +28,6 @@ export class FakeCompanyGenerator implements Generator<Company> {
 
     return {
       name,
-      raisonSociale: name,
       address: this.addressGenerator.generate(),
       headcountText: this.generateHeadCountText(),
       naf: this.getRandomNafCode(),

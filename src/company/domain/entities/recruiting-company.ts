@@ -20,4 +20,9 @@ export interface RecruitingCompany extends Company {
    * Distance from the requested geographical point (in kilometers).
    */
   distance?: number;
+
+  /**
+   * Jobs that could potentially be open in this company.
+   */
+  probabilityJobs?: Array<{ name?: string; category?: string }>;
 }
