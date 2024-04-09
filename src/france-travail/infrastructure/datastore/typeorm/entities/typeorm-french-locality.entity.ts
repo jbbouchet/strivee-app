@@ -18,12 +18,12 @@ export class TypeormFrenchLocalityEntity implements FrenchLocality {
   /**
    * @inheritDoc
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', name: 'insee_code' })
   public inseeCode: string;
 
   /**
    * @inheritDoc
    */
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', name: 'postal_code' })
   public postalCode: string;
 }
