@@ -6,7 +6,7 @@ import { RecruitingCompany } from '@strivee-api/company';
  * according to the `probabilityScore` property.
  *
  * @param companies - The array to sort.
- * @returns {Array<RecruitingCompany>} - A copy of the array sorted by `probabilityScore`.
+ * @return {Array<RecruitingCompany>} - A copy of the array sorted by `probabilityScore`.
  */
 export function sortByLowerProbabilityScore(companies: RecruitingCompany[]) {
   return [...companies].sort((a, b) => a.probabilityScore - b.probabilityScore);
@@ -17,7 +17,7 @@ export function sortByLowerProbabilityScore(companies: RecruitingCompany[]) {
  * according to the `probabilityScore` property.
  *
  * @param companies - The array to sort.
- * @returns  {Array<RecruitingCompany>} - A copy of the array sorted by `probabilityScore`.
+ * @return  {Array<RecruitingCompany>} - A copy of the array sorted by `probabilityScore`.
  */
 export function sortByHigherProbabilityScore(companies: RecruitingCompany[]) {
   return companies.sort((a, b) => b.probabilityScore - a.probabilityScore);

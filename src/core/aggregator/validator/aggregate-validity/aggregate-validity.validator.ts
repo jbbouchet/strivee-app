@@ -10,7 +10,7 @@ import { isAggregationState } from '../is-aggregate-state/is-aggregation-state.v
 /**
  * Tests if the provider has the same type as declared in the `RecruitingCompanyAggregate` interface.
  * @param provider - The provider to test.
- * @returns True if the provider is a non-empty string or a symbol.
+ * @return True if the provider is a non-empty string or a symbol.
  */
 export function isAValidAggregatorSourceProvider(provider: any): provider is AggregatorSourceResult['provider'] {
   return (typeof provider === 'string' && provider !== '') || typeof provider === 'symbol';
@@ -19,7 +19,7 @@ export function isAValidAggregatorSourceProvider(provider: any): provider is Agg
 /**
  * Tests if the provided object implements the `AggregatorSourceResult` interface
  * @param result - The object to test.
- * @returns True if the result is a `AggregatorSourceResult` instance, false otherwise.
+ * @return True if the result is a `AggregatorSourceResult` instance, false otherwise.
  */
 export function isMaybeAnAggregatorSourceResult(result: any): result is AggregatorSourceResult {
   return (
@@ -33,7 +33,7 @@ export function isMaybeAnAggregatorSourceResult(result: any): result is Aggregat
 /**
  * Tests if the provided object implements the `AggregateSourceValidResult` interface
  * @param result - The object to test.
- * @returns True if the result is a `AggregateSourceValidResult` instance, false otherwise.
+ * @return True if the result is a `AggregateSourceValidResult` instance, false otherwise.
  */
 export function isAnAggregateSourceValidResult<E = any>(result: any): result is AggregateSourceValidResult<E> {
   return (
@@ -47,9 +47,9 @@ export function isAnAggregateSourceValidResult<E = any>(result: any): result is 
 /**
  * Tests if the provided object implements the `AggregateSourceInValidResult` interface
  * @param result - The object to test.
- * @returns True if the result is a `AggregateSourceInValidResult` instance, false otherwise.
+ * @return True if the result is a `AggregateSourceInValidResult` instance, false otherwise.
  */
-export function isAnAggregateSourceInvalidResult<E = any>(result: any): result is AggregateSourceInValidResult {
+export function isAnAggregateSourceInvalidResult(result: any): result is AggregateSourceInValidResult {
   return (
     isMaybeAnAggregatorSourceResult(result) &&
     (result as AggregateSourceInValidResult).state === AGGREGATION_STATE.INVALID &&

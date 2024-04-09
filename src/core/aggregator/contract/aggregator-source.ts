@@ -1,4 +1,4 @@
-import { AggregatorSourceResult } from './aggregator-source-result';
+import { AggregateSourceInValidResult, AggregateSourceValidResult } from './aggregator-source-result';
 
 
 /**
@@ -17,5 +17,5 @@ export interface AggregatorSource<E, O = any> {
    *
    * @param options - options to
    */
-  createAggregate: (options: O) => Promise<AggregatorSourceResult>;
+  createAggregate: (options: O) => Promise<AggregateSourceValidResult<E> | AggregateSourceInValidResult>;
 }
