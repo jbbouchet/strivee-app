@@ -67,15 +67,15 @@ export class FranceTravailAggregateSource implements AggregatorSource<Recruiting
   public async createAggregate(
     options: RecruitingSearchOptions,
   ): Promise<AggregateSourceValidResult<RecruitingCompany> | AggregateSourceInValidResult> {
-    // Create headers
-    const headers = this.createHeaders();
-    const token = await this.auth.getToken();
-    headers.set('Authorization', token.authorization);
-
     // Prepare request params
     let config: AxiosRequestConfig;
 
     try {
+      // Create headers
+      const headers = this.createHeaders();
+      const token = await this.auth.getToken();
+      headers.set('Authorization', token.authorization);
+
       config = {
         params: await this.buildParams(options),
         headers,

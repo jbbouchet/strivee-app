@@ -5,6 +5,7 @@ import {
   AggregateSourceValidResult,
   Aggregator,
   AggregatorSource,
+  isAnAggregateSourceInvalidResult,
   isAnAggregateSourceValidResult,
   NoAggregationReadySourceError,
   NoValidAggregationSourceResultError,
@@ -41,11 +42,15 @@ export class RecruitingCompanyAggregator implements Aggregator<RecruitingCompany
   public async createAggregate(options: RecruitingSearchOptions): Promise<Aggregate<RecruitingCompany>> {
     const sources = this.getReadySources();
 
-    this.logger.log(`Create aggregate with ${sources.length} sources`, options);
+    this.logger.log(`Create aggregate with ${sources.length} sources`);
 
     const results = await Promise.all(sources.map((source) => source.createAggregate(options)));
 
     const valid: Array<AggregateSourceValidResult<RecruitingCompany>> = results.filter(isAnAggregateSourceValidResult);
+
+    results.filter(isAnAggregateSourceInvalidResult).forEach((result) => {
+      this.logger.error(result.reason().message);
+    });
 
     if (valid.length === 0) {
       throw new NoValidAggregationSourceResultError(`No data source produced a valid result during the aggregation of Recruiting companies.`);

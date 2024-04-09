@@ -50,9 +50,8 @@ export class FranceTravailAuthenticator {
   private async requestNewToken(): Promise<{ type: string; value: string; authorization: string }> {
     const { data } = await firstValueFrom(
       this.httpService.post<FranceTravailAuthResponse>(this.url, this.createPayload(), { headers: this.createHeaders() }).pipe(
-        catchError((error: AxiosError) => {
-          console.warn(error.response.data);
-          throw 'An error happened!';
+        catchError((error: AxiosError<{ error: string; error_description: string }>) => {
+          throw new Error(`FranceTravail authentification fail (${error.response.data.error}) : ${error.response.data.error_description}.`);
         }),
       ),
     );
@@ -126,7 +125,7 @@ export class FranceTravailAuthenticator {
       case 'bearer':
         return `Bearer ${token}`;
       default:
-        throw new Error(`Unknown token type ${type}`);
+        throw new Error(`Unknown token type ${type}.`);
     }
   }
 }
