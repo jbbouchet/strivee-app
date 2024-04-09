@@ -1,7 +1,8 @@
-import { Generator } from '@strivee-api/core';
+import { faker } from '@faker-js/faker/locale/fr';
 import { Company, RecruitingCompany } from '@strivee-api/company';
 import { FakeCompanyGenerator } from '@strivee-api/company/infrastructure/generator';
-import { faker } from '@faker-js/faker/locale/fr';
+import { Generator } from '@strivee-api/core';
+
 
 /**
  * Use this class to generate `RecruitingCompany` using the Fakejs lib.
@@ -26,6 +27,7 @@ export class FakeRecruitingCompanyGenerator implements Generator<RecruitingCompa
 
     return {
       ...company,
+      probabilityScore: faker.number.float({ min: 0, max: 100, fractionDigits: 0.01 }),
       contactMode: this.getContactMode(),
       alternance: faker.datatype.boolean(),
       distance: faker.datatype.boolean() ? faker.number.float({ min: 0, max: 50 }) : undefined,
