@@ -25,7 +25,7 @@ describe('@Application/Company/RecruitingCompanyAggregateSourceValidResult', () 
   });
 
   it('should initialize with provided companies', () => {
-    let companies = Array.from({ length: 42 }, (_, index) => ({ name: index }) as unknown as RecruitingCompany);
+    const companies = Array.from({ length: 42 }, (_, index) => ({ name: index }) as unknown as RecruitingCompany);
 
     const result = new RecruitingCompanyAggregateSourceValidResult('testProvider', companies);
     expect(result.entities()).toEqual(companies);
@@ -33,7 +33,7 @@ describe('@Application/Company/RecruitingCompanyAggregateSourceValidResult', () 
   });
 
   it('should allow updating the stored companies', () => {
-    let companies = Array.from({ length: 42 }, (_, index) => ({ name: index }) as unknown as RecruitingCompany);
+    const companies = Array.from({ length: 42 }, (_, index) => ({ name: index }) as unknown as RecruitingCompany);
     const result = new RecruitingCompanyAggregateSourceValidResult('testProvider', companies);
 
     const newCompanies: RecruitingCompany[] = Array.from({ length: 10 }, (_, index) => ({ name: index }) as unknown as RecruitingCompany);

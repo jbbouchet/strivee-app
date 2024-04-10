@@ -32,7 +32,7 @@ describe('@Infrastructure/FranceTravail/FranceTravailAuthenticator', () => {
   describe('=> getToken() method', () => {
     it('should return the value from http request', async () => {
       const accessToken = 'my-custom-access-token';
-      let response: FranceTravailAuthResponse = {
+      const response: FranceTravailAuthResponse = {
         access_token: accessToken,
         expires_in: 60 * 1000,
         scope: 'custom-scope',
@@ -80,7 +80,7 @@ describe('@Infrastructure/FranceTravail/FranceTravailAuthenticator', () => {
     });
 
     it('should thrown an error when the token type is unknown', async () => {
-      let response: FranceTravailAuthResponse = {
+      const response: FranceTravailAuthResponse = {
         access_token: 'my-custom-access-token',
         expires_in: 60 * 1000,
         scope: 'custom-scope',
