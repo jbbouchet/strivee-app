@@ -1,12 +1,22 @@
 import { Module } from '@nestjs/common';
-import { TokenRateLimiter } from '@strivee-api/security';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TokenRateLimiter, TokenRateLimiterConfig } from '@strivee-api/security';
+import securityConfig from './config';
+import { createTokenRateLimiterConfig } from './factory';
 import { InMemoryTokenRateLimiter } from './service';
 
 @Module({
+  imports: [ConfigModule.forFeature(securityConfig)],
   providers: [
     {
+      provide: TokenRateLimiterConfig,
+      useFactory: (s: ConfigService) => createTokenRateLimiterConfig(s),
+      inject: [ConfigService],
+    },
+    {
       provide: TokenRateLimiter,
-      useValue: new InMemoryTokenRateLimiter(),
+      useFactory: (c: TokenRateLimiterConfig) => new InMemoryTokenRateLimiter(c),
+      inject: [TokenRateLimiterConfig],
     },
   ],
   exports: [TokenRateLimiter],

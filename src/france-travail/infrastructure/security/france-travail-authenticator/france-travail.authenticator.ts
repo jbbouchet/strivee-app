@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { FranceTravailAuthConfig } from '@strivee-api/france-travail';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
-import { FranceTravailAuthPayload, FranceTravailAuthResponse } from '../contract';
+import { FranceTravailAuthPayload, FranceTravailAuthResponse } from '../../contract';
 
 @Injectable()
 export class FranceTravailAuthenticator {

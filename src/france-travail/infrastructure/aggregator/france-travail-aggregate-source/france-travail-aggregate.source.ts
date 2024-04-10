@@ -7,7 +7,7 @@ import { AggregateSourceInValidResult, AggregateSourceValidResult, AGGREGATION_S
 import {
   FranceTravailAggregatorConfig,
   FranceTravailRecruitingCompany,
-  FranceTravailRecruitingTransformer,
+  FranceTravailRecruitingCompanyTransformer,
   FrenchLocality,
   Job,
 } from '@strivee-api/france-travail';
@@ -15,7 +15,7 @@ import { TooMayLocalityError } from '@strivee-api/france-travail/application/err
 import { NoLocalityFoundError } from '@strivee-api/france-travail/application/error/no-locality-found.error';
 import { FranceTravailSearchParams, FranceTravailSearchResponse } from '@strivee-api/france-travail/infrastructure/contract';
 import { TypeormFrenchLocalityEntity, TypeormJobEntity } from '@strivee-api/france-travail/infrastructure/datastore/typeorm';
-import { FranceTravailAuthenticator } from '@strivee-api/france-travail/infrastructure/security/france-travail.authenticator';
+import { FranceTravailAuthenticator } from '@strivee-api/france-travail/infrastructure/security';
 import { AxiosError, AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 import { Repository } from 'typeorm';
@@ -57,6 +57,9 @@ export class FranceTravailAggregateSource implements AggregatorSource<Recruiting
    * @inheritDoc
    */
   public isReady(): boolean {
+    if (this.config.apiRateLimit === undefined) {
+      return true;
+    }
     return this.requestCount < this.config.apiRateLimit;
   }
 
@@ -176,7 +179,7 @@ export class FranceTravailAggregateSource implements AggregatorSource<Recruiting
    * @private
    */
   private transformCompanies(companies: FranceTravailRecruitingCompany[]): RecruitingCompany[] {
-    const transformer = new FranceTravailRecruitingTransformer();
+    const transformer = new FranceTravailRecruitingCompanyTransformer();
     return companies.map(transformer.toRecruitingCompany);
   }
 
@@ -186,7 +189,6 @@ export class FranceTravailAggregateSource implements AggregatorSource<Recruiting
    * @private
    */
   private transformAxiosError(error: AxiosError): Error {
-    console.warn(error);
     return new Error(error.response.data as string);
   }
 

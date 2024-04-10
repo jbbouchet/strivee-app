@@ -21,7 +21,17 @@ Ce service permet de connaitre le solde de jeton disponible, de vérifier si le 
 d'un nombre `n` de jeton.
 
 > [!TIP]
-> Ce service est une abstraction et son implementation actuelle, pour ce test; utilise la
+> Ce service est une abstraction et son implementation actuelle, pour ce test npm; utilise la
 > class `InMemoryTokenRateLimiter` qui stock
 > le solde des jetons de chaque compte en mémoire. Chaque redémarrage de l'A.P.I. réinitialisera donc le solde
 > disponible.
+
+## Définir une limite
+
+Par défaut, la limite est défini à 500 jetons non renouvelable.
+Pour changer le nombre de jetons par défaut, modifier la valeur dans le fichier d'environnement :
+
+```dotenv
+# The default count of the token available by default for each account.
+TOKEN_RATE_LIMIT_DEFAULT_COUNT=100
+```

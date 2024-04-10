@@ -6,7 +6,7 @@ describe('@Infrastructure/security/InMemoryTokenRateLimiter', () => {
   let account: Account;
 
   beforeEach(() => {
-    limiter = new InMemoryTokenRateLimiter();
+    limiter = new InMemoryTokenRateLimiter({ defaultTokenCount: 10 });
     account = {
       provider: 'my-custom-provider',
       ref: () => 'test',
@@ -20,6 +20,12 @@ describe('@Infrastructure/security/InMemoryTokenRateLimiter', () => {
 
   it('should decrease token count correctly', async () => {
     await limiter.decreaseTokenCount(account, 1);
+    const tokens = await limiter.getAvailableTokenCount(account);
+    expect(tokens).toBe(9);
+  });
+
+  it('should decrease by 1 if the provided account is not a valid number.', async () => {
+    await limiter.decreaseTokenCount(account, NaN);
     const tokens = await limiter.getAvailableTokenCount(account);
     expect(tokens).toBe(9);
   });

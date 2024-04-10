@@ -1,1 +1,1 @@
-export * from './aggragator-sources-loader/aggregator-sources-loader';
+export * from './aggregator-sources-loader/aggregator-sources-loader';

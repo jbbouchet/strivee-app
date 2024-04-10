@@ -1,1 +1,1 @@
-export * from './france-travail-aggregate.source';
+export * from './france-travail-aggregate-source/france-travail-aggregate.source';

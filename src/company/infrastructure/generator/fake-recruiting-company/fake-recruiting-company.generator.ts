@@ -27,7 +27,7 @@ export class FakeRecruitingCompanyGenerator implements Generator<RecruitingCompa
 
     return {
       ...company,
-      probabilityScore: faker.number.float({ min: 0, max: 100, fractionDigits: 0.01 }),
+      probabilityScore: faker.number.float({ min: 0, max: 100, fractionDigits: 2 }),
       contactMode: this.getContactMode(),
       alternance: faker.datatype.boolean(),
       distance: faker.datatype.boolean() ? faker.number.float({ min: 0, max: 50 }) : undefined,
