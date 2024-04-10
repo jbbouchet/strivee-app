@@ -5,7 +5,7 @@ import { FranceTravailRecruitingCompany } from '@strivee-api/france-travail';
 /**
  * Transforms FranceTravailRecruitingCompany.
  */
-export class FranceTravailRecruitingTransformer {
+export class FranceTravailRecruitingCompanyTransformer {
   /**
    * Transforms `FranceTravailRecruitingCompany` into `RecruitingCompany`.
    * @param company - The company to transform.

@@ -1,1 +1,1 @@
-export * from './france-travail.authenticator';
+export * from './france-travail-authenticator/france-travail.authenticator';
