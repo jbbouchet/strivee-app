@@ -45,6 +45,11 @@ export class InMemoryTokenRateLimiter implements TokenRateLimiter {
     return Promise.resolve(this.getCount(account));
   }
 
+  /**
+   * Get the stored count or the default count of token for an account.
+   * @param account - The account
+   * @private
+   */
   private getCount(account: Account): number {
     const key = `${account.provider}:${account.ref()}`;
 
@@ -57,6 +62,12 @@ export class InMemoryTokenRateLimiter implements TokenRateLimiter {
     return count;
   }
 
+  /**
+   * Store the current token count in the memory store.
+   * @param account - The account
+   * @param count - The token count
+   * @private
+   */
   private setCount(account: Account, count: number) {
     const key = `${account.provider}:${account.ref()}`;
     this.store.set(key, count);

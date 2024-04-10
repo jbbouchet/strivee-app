@@ -1,5 +1,10 @@
 import { Account } from '@strivee-api/security';
 
+
+/**
+ * TokenRateLimiter is an abstract class that provides methods to check the availability of tokens for an account,
+ * retrieve the number of available tokens, and decrease the token count for an account.
+ */
 export abstract class TokenRateLimiter {
   /**
    * Checks if the account still has tokens available.
@@ -14,7 +19,7 @@ export abstract class TokenRateLimiter {
   public abstract getAvailableTokenCount(account: Account): Promise<number>;
 
   /**
-   *  Reduces the number of available tokens for the account
+   * Reduces the number of available tokens for the account
    * @param account - The account.
    * @param count - The number of tokens to remove.
    * @return The new token count.

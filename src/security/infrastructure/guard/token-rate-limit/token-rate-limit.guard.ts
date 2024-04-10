@@ -6,6 +6,14 @@ import { getAccountFromContext } from '@strivee-api/security/infrastructure/func
 export class TokenRateLimitGuard implements CanActivate {
   constructor(private readonly limiter: TokenRateLimiter) {}
 
+  /**
+   * Determines whether the account associated with the execution context has available tokens to execute the request.
+   *
+   * @param context - Current execution context.Provides access to details about the current request pipeline.
+   * @returns {Promise<boolean>} - Value indicating whether the current request is allowed to
+   * proceed.
+   * @throws {HttpException} - Throws an 429 Http exception if the account no longer has any tokens available.
+   */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const account = await getAccountFromContext(context);
 
