@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { getColumnNamesAccessorFromEntityMetadata } from '@strivee-api/common/database/infrastructure/function/get-column-name/get-column-name';
 import { RecruitingCompany, RecruitingCompanyAggregateSourceValidResult, RecruitingSearchOptions } from '@strivee-api/company';
 import { RecruitingAggregatorSource } from '@strivee-api/company/infrastructure/decorator';
-import { AggregateSourceInValidResult, AggregateSourceValidResult, AggregatorSource } from '@strivee-api/core';
-import { AGGREGATION_STATE } from '@strivee-api/core/aggregator/state';
+import { AggregateSourceInValidResult, AggregateSourceValidResult, AGGREGATION_STATE, AggregatorSource } from '@strivee-api/core';
 import {
   FranceTravailAggregatorConfig,
   FranceTravailRecruitingCompany,
@@ -128,7 +127,19 @@ export class FranceTravailAggregateSource implements AggregatorSource<Recruiting
    * @param response - The fetched data.
    * @private
    */
-  private createAggregateSourceValidResult(response: FranceTravailSearchResponse): AggregateSourceValidResult<RecruitingCompany> {
+  private createAggregateSourceValidResult(
+    response: FranceTravailSearchResponse,
+  ): AggregateSourceValidResult<RecruitingCompany> | AggregateSourceInValidResult {
+    if (!response || typeof response !== 'object' || !Array.isArray(response.companies)) {
+      return {
+        provider: FranceTravailAggregateSource.AGGREGATE_PROVIDER,
+        state: AGGREGATION_STATE.INVALID,
+        reason: () => ({
+          message: 'The companies property is not defined in the response.',
+          cause: response,
+        }),
+      };
+    }
     const result = this.createEmptyAggregate();
     const companies = this.transformCompanies(response.companies);
     result.setCompanies(companies);
@@ -175,6 +186,7 @@ export class FranceTravailAggregateSource implements AggregatorSource<Recruiting
    * @private
    */
   private transformAxiosError(error: AxiosError): Error {
+    console.warn(error);
     return new Error(error.response.data as string);
   }
 
@@ -207,7 +219,7 @@ export class FranceTravailAggregateSource implements AggregatorSource<Recruiting
         .where(`"${alias}"."label" LIKE :label`, { label: `%${option.job}%` })
         .execute();
 
-      return data.map((row) => row.code);
+      return Array.from(new Set(data.map((row) => row.code)));
     }
 
     return [];

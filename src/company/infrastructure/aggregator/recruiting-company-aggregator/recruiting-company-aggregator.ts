@@ -49,7 +49,7 @@ export class RecruitingCompanyAggregator implements Aggregator<RecruitingCompany
     const valid: Array<AggregateSourceValidResult<RecruitingCompany>> = results.filter(isAnAggregateSourceValidResult);
 
     results.filter(isAnAggregateSourceInvalidResult).forEach((result) => {
-      this.logger.error(result.reason().message);
+      this.logger.error(result.reason().message, result.reason());
     });
 
     if (valid.length === 0) {
