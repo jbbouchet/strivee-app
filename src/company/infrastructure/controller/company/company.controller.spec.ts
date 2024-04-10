@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecruitingCompanyAggregator } from '@strivee-api/company/infrastructure/aggregator';
+import { TokenRateLimiter } from '@strivee-api/security';
 import { CompanyController } from './company.controller';
 
 describe('CompanyController', () => {
@@ -11,6 +12,10 @@ describe('CompanyController', () => {
       providers: [
         {
           provide: RecruitingCompanyAggregator,
+          useValue: {},
+        },
+        {
+          provide: TokenRateLimiter,
           useValue: {},
         },
       ],
