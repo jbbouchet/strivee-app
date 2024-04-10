@@ -2,6 +2,7 @@ import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 
@@ -19,6 +20,11 @@ function addGlobalPipes(app: INestApplication): void {
   );
 }
 
+/**
+ * Start the Swagger documentation when the application is started in a "development" environment/
+ * @param app - The Nest application object.
+ * @param config - The config service
+ */
 function addOpenApiDocumentation(app: INestApplication<any>, config: ConfigService) {
   const env = config.get('application.env');
 
@@ -29,15 +35,25 @@ function addOpenApiDocumentation(app: INestApplication<any>, config: ConfigServi
   }
 }
 
+/**
+ * Add security middlewares
+ * @param app  - The Nest application object.
+ */
+function addSecurity(app: INestApplication) {
+  app.use(helmet());
+}
+
+/**
+ * Create a new application and listen on port defined in configuration.
+ */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Application/bootstrap');
-
-  addGlobalPipes(app);
-
   const config = app.get(ConfigService);
   const port = config.getOrThrow<number>('application.port');
 
+  addSecurity(app);
+  addGlobalPipes(app);
   addOpenApiDocumentation(app, config);
 
   await app.listen(port);
