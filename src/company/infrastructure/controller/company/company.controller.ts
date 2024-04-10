@@ -1,12 +1,14 @@
 import { Controller, Get, Logger, Query, UseGuards } from '@nestjs/common';
-import { RecruitingCompany } from '@strivee-api/company';
+import { ApiBadRequestResponse, ApiOkResponse, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
 import { RecruitingCompanyAggregator } from '@strivee-api/company/infrastructure/aggregator';
 import { RecruitingCompanySearchOptionsDto } from '@strivee-api/company/infrastructure/dto';
+import { CompanyListResponse } from '@strivee-api/company/infrastructure/entities/company-list-response';
 import { NoValidAggregationSourceResultError } from '@strivee-api/core';
 import { Account, TokenRateLimiter } from '@strivee-api/security';
 import { RequestAccount } from '@strivee-api/security/infrastructure/decorator';
 import { TokenRateLimitGuard } from '@strivee-api/security/infrastructure/guard';
 
+@ApiTags('Company')
 @Controller('company')
 export class CompanyController {
   private readonly logger = new Logger(this.constructor.name);
@@ -18,22 +20,28 @@ export class CompanyController {
 
   @Get()
   @UseGuards(TokenRateLimitGuard)
-  public async list(@RequestAccount() account: Account, @Query() options: RecruitingCompanySearchOptionsDto) {
-    let companies: RecruitingCompany[] = [];
-    let availableToken = await this.limiter.getAvailableTokenCount(account);
+  @ApiOkResponse({ description: 'The list of companies likely to recruit and the remaining number of call tokens.', type: CompanyListResponse })
+  @ApiBadRequestResponse({ description: 'One or more parameters of the request are not valid.' })
+  @ApiTooManyRequestsResponse({ description: 'All tokens available for this account have been used.' })
+  public async list(@RequestAccount() account: Account, @Query() options: RecruitingCompanySearchOptionsDto): Promise<CompanyListResponse> {
+    const response = new CompanyListResponse();
+    response.availableToken = await this.limiter.getAvailableTokenCount(account);
 
     try {
       const aggregate = await this.aggregator.createAggregate(options);
-      companies = aggregate.entities();
-      availableToken = await this.limiter.decreaseTokenCount(account);
+      response.success = true;
+      response.companies = aggregate.entities();
+      response.availableToken = await this.limiter.decreaseTokenCount(account);
     } catch (e) {
       if (e instanceof NoValidAggregationSourceResultError) {
         this.logger.error(e.message);
+        response.success = false;
+        response.message = 'No source has produced a relevant result for this request. Modify the parameters and try again.';
       } else {
         throw e;
       }
     }
 
-    return { availableToken, companies };
+    return response;
   }
 }
