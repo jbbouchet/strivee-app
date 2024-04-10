@@ -7,8 +7,8 @@
 
 Suite à la lecture du sujet, voici les grandes problématiques métier extraites :
 
-1. Créer un outil qui permet de récupérer les entreprises qui recrutent.
-2. Créer un système d'aggrégation de plateforme qui se doit être évolutif (*...le développement d’un outil de
+1. Créer un outil qui permet de lister les entreprises qui recrutent.
+2. Créer un système d'aggrégation de plateforme qui se doit d'être évolutif (*...le développement d’un outil de
    centralisation de **ces différentes plateformes**...*) car susceptible
    d'avoir plusieurs sources.
 3. Intégrer une première source externe via l'A.P.I de FranceTravail "La Bonne Boite".
@@ -18,11 +18,11 @@ Suite à la lecture du sujet, voici les grandes problématiques métier extraite
 
 Le but du système est de fournir une manière de récupérer les entreprises susceptibles de recruter depuis plusieurs
 sources. Chaque source répond à ses propres
-contraintes (authentification par exemple), et fournit son propre schema de donnée.
+contraintes (authentification par exemple), et fournit son propre schéma de données.
 
-L'objectif a donc été de créer un système qui unifie la manière dont les sources fournissent les données des entreprise
+L'objectif a donc été de créer un système qui unifie la manière dont les sources fournissent les données des entreprises
 à notre système,
-en permet aussi de rajouter des sources au fur et à mesure sans avoir à modifier le
+en laissant la possibilité d'ajouter des sources au fur et à mesure sans avoir à modifier le
 système initial.
 Pour cela, notre système se repose sur deux éléments permettant l'abstraction et
 la normalisation : Un `Aggregator` qui a pour but de collecter des entités depuis des `AggregatorSource`.
@@ -58,7 +58,7 @@ sequenceDiagram
 
 > **Que faire si une source lève une erreur lors de la récupération des entités ?**
 
-Dans cette configuration, les `AggregatorSource` échoue en silence en retournant un `AggregateSourceInvalidResult` qui
+Dans cette configuration, les `AggregatorSource` échouent en silence en retournant un `AggregateSourceInvalidResult` qui
 explique les raisons de l'échec. Néanmoins, si toutes les sources échouent alors l'`Aggregator` léve une
 erreur `NoValidAggregationSourceResultError`. Il est à la charge du reste
 du code de gérer l'erreur. *Une piste d'amélioration serait de pouvoir configurer l'`Aggregator` lors de sa création en
@@ -69,7 +69,7 @@ en cas de problème interne.*
 
 Pour différentes raisons, certaines sources peuvent ne pas être disponibles ou produiront une erreur à coup sûr (par
 exemple une A.P.I avec un rateLimit).
-Pour éviter les appels inutiles chaque source indique si ells est prête avant l'appel (`AggregatorSource.isReady()`).
+Pour éviter les appels inutiles chaque source indique si elle est prête avant l'appel (`AggregatorSource.isReady()`).
 
 #### Pistes d'amélioration :
 
@@ -79,26 +79,26 @@ Pour éviter les appels inutiles chaque source indique si ells est prête avant 
 
 ## Integration de l'A.P.I. de Francetravail.io
 
-L'A.P.I **La Bonne Boite** est un producteur de donnée pour notre A.P.I. Son integration a posé deux problèmiques à
+L'A.P.I **La Bonne Boite** est un producteur de donnée pour notre A.P.I. Son integration a posé deux problèmatiques à
 résoudre :
 
-1. Les appels doivent être authentifiés et sont limités à 1 appel par second.
+1. Les appels doivent être authentifiés et sont limités à 1 appel par seconde.
 2. Les paramètres de la requête correspondent à des éléments "metier" de FranceTravail (`rome_code` et `commune_id`) et
-   peuvent ne pas être explicite pour une personne lambda qui utiliserait notre plateforme.
+   peuvent ne pas être explicites pour une personne lambda qui utiliserait notre plateforme.
 
 #### Authentification Francetravail.io :
 
 Pour résoudre ce problème chaque appel à L'A.P.I **La Bonne Boite** récupère en amont un token (Bearer dans notre cas)
 via la class `FranceTravailAuthenticator`.
-De plus cette class est en mesure, selon les options utilisées lors de sa création, de récupérer automatiquement un
+De plus cette classe est en mesure, selon les options utilisées lors de sa création, de récupérer automatiquement un
 nouveau
 token dès que le précédent est périmé.
 Cela nous permet d'éviter d'attendre une première requête avant de pouvoir interroger l'A.P.I. **La Bonne Boite**.
 
 #### Rendre l'utilisation de Francetravail.io plus "User friendly".
 
-En imaginant un système qui prendrait les informations dans différentes sources, il parait plus adaptée que les requêtes
-s'effectue
+En imaginant un système qui prendrait les informations dans différentes sources, il parait plus adapté que les requêtes
+s'effectuent
 non pas sur des codes ROME ou des communes ID de l'INSEE, mais sur des termes plus utilisés par le grand public.
 Il a donc fallu trouver un moyen de faire correspondre les codes communes INSEE avec les noms de ville + code postal, et
 des noms de métier avec les codes ROME.
@@ -112,21 +112,22 @@ fichier (unix_referentiel_appellation_v455_utf8.csv) qui permet de faire corresp
 des codes ROME.
 
 À partir de ce fichier, il est alors possible de faire des recherches sur des termes plus génériques. Pour permettre une
-recherche éfficiente et moins coûteuse en ressource que celui de charger les données en mémoire à chaque requête à
-l'A.P.I., le choix s'est porté sur une intégration de ces données dans une base de donnée Postgres. *Il a été admis que
+recherche éfficiente et moins coûteuse en ressource que celle de charger les données en mémoire à chaque requête à
+l'A.P.I., le choix s'est porté sur une intégration de ces données dans une base Postgresql. *Il a été admis que
 pour ce genre de projet, une
 base de donnée serait de toute manière requise pour le reste de l'application.*
 L'avantage est double : Une vitesse d'exécution de la recherche plus rapide, et la
 possibilité de bénéficier des recherches `LIKE %%` du SQL
 et du format de colonne `citext`.
 Le coût de cette approche a été de penser un système qui permet de remplir au préalable la base de donnée, mais aussi de
-suivre les modifications du fichier sources (ajout ou suppression de donnée).
+suivre les modifications du fichier source (ajout ou suppression de donnée).
 
-**Cette même solution a été utilisée pour les codes postaux et nom de ville.**
+**Cette même solution a été utilisée pour les codes postaux et noms de ville.**
 
 ###### Code postal + ville
 
 Prérequis de cet exercice, une première piste était déjà fournie dans
-l'énoncé (https://www.insee.fr/fr/information/2114819), puis confirmer par Kevin par mail avec le lien vers la
-plateforme data.gouv.fr.
-Comme pour les codes ROME, le choix s'est porté sur une intégration en base de donnée.
+l'énoncé (https://www.insee.fr/fr/information/2114819), puis confirmée par Kevin par mail avec le lien vers la
+plateforme data.gouv.fr. Il a donc été choisi d'importer la correspondance entre les villes + code postaux et les code
+INSEE directement en base de donnée,
+de la même manière que les codes ROME,

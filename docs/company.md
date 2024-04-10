@@ -7,13 +7,13 @@
 > l'adresse **http://`<domain-de-lapi:port>`/swagger** Veillez à ce que l'application soit démarrée pour pouvoir y
 > accéder.
 
-#### Paramètre d'entrée :
+#### Paramètres d'entrée :
 
-| Nom          |   type   | description                                           | Requis |
-|--------------|:--------:|:------------------------------------------------------|:------:|
-| `job`        | `string` | le nom ou type de poste recherché.                    |  `x`   |
-| `postalCode` | `string` | code postal près duquel la recherche doit s'effectuer |        |
-| `locality`   | `string` | La ville près duquel la recherche doit s'effectuer    |        |
+| Nom          |   type   | description                                             | Requis |
+|--------------|:--------:|:--------------------------------------------------------|:------:|
+| `job`        | `string` | le nom ou type de poste recherché.                      |  `x`   |
+| `postalCode` | `string` | code postal près duquel la recherche doit s'effectuer   |        |
+| `locality`   | `string` | La ville près de laquelle la recherche doit s'effectuer |        |
 
 **Attention**: *Un code postal ou une ville est requis à minima pour effectuer la recherche. Pour plus de précision
 dans la recherche, la combinaison des deux est vivement conseillée.*
