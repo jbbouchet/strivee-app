@@ -1,4 +1,5 @@
 export * from './contract/account';
+export * from './contract/token-rate-limiter.config';
 
 export * from './validator';
 

@@ -1,11 +1,13 @@
-import { Account, TokenRateLimiter } from '@strivee-api/security';
+import { Account, TokenRateLimiter, TokenRateLimiterConfig } from '@strivee-api/security';
 
 export class InMemoryTokenRateLimiter implements TokenRateLimiter {
   private readonly store = new Map<string, number>();
 
   private get defaultTokenCount() {
-    return 10;
+    return this.config.defaultTokenCount;
   }
+
+  constructor(private readonly config: TokenRateLimiterConfig) {}
 
   /**
    * @inheritDoc
