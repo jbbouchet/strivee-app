@@ -1,0 +1,1 @@
+export * from './is-account/is-account.validator';
